@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+<head>	
+    <meta charset="UTF-8">
+    <title>Visor Ejército Romano Siglo II</title>
+   
+    <!-- Leaflet CSS & JS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" integrity="sha512-Rksm5RenBEKSKFjgI3a41vrjkw4EVPlJ3+OiI65vTjIdo9brlAacEuKOiQ5OFh7cOI1bkDwLqdLw3Zg0cRJAAQ==" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js" integrity="sha512-/Nsx9X4HebavoBvEBuyp3I7od5tA0UzAxs+j83KgC8PU0kgB4XiK4Lfe4y4cgBtaRJQEIFCW+oC506aPT2L1zw==" crossorigin=""></script> 
+
+    <!-- Mapbox GL -->
+    <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v0.35.1/mapbox-gl.css" rel='stylesheet' />
+    <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v0.35.1/mapbox-gl.js"></script>
+
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+
+    <!-- Sidebar -->
+    <script src="Plugin/Sidebar/L.Control.Sidebar.js"></script>
+    <link rel="stylesheet" href="Plugin/Sidebar/L.Control.Sidebar.css">
+
+    <!-- GeoTiff & Plotty -->
+    <script src="https://unpkg.com/geotiff@0.4.1/dist/main.js"></script>
+    <script src="https://unpkg.com/plotty@0.2.0/src/plotty.js"></script>
+    
+    <!-- Basemap & Esri -->
+    <script src="Plugin/Bing/Bing.js" type="text/javascript"></script>
+    <script src="https://unpkg.com/esri-leaflet@2.0.8"></script>
+    
+    <!-- GeoJSON Files -->
+    <script type="text/javascript" src="JS/Unidades.js"></script>
+    <script type="text/javascript" src="JS/prov.js"></script>
+    <script type="text/javascript" src="JS/Ciudades.js"></script>
+    
+    <!-- CSS Estilos -->
+    <link rel="stylesheet" href="CSS/estilo.css"/>	
+	
+    <!-- MarkerCluster -->
+    <link rel="stylesheet" href="Plugin/MarkerCluster/MarkerCluster.css" />
+    <link rel="stylesheet" href="Plugin/MarkerCluster/MarkerCluster.Default.css"/>
+    <script src="Plugin/MarkerCluster/leaflet.markercluster.js"></script>
+	
+    <!-- Búsquedas -->
+    <script src="Plugin/Search/src/leaflet-search.js"></script>
+    <link rel="stylesheet" href="Plugin/Search/src/leaflet-search.css">
+	
+    <!-- Imprimir -->
+    <script src="Plugin/Print/bundle.js"></script>
+	
+    <!-- Control de capas -->
+    <script src="Plugin/StyledLayer/src/styledLayerControl.js"></script>
+    <link rel="stylesheet" href="Plugin/StyledLayer/css/styledLayerControl.css">
+             
+    <!-- Shapefile -->
+    <script src="Plugin/Shapefile/leaflet.shpfile.js"></script>
+    <script src="Plugin/Shapefile/shp.js"></script>
+    
+    <!-- Heatmaps -->
+    <script src="Plugin/Heatmaps/leaflet-heat.js"></script> 
+    
+    <!-- Fuentes Google Fonts -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Source+Sans+Pro&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&family=Rubik:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Recursive:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Titillium+Web:wght@300&display=swap" rel="stylesheet">
+
+    <style>             
+        @font-face {
+            font-family: Raleway;
+            src: local("Raleway");
+            font-weight: bold;
+        }            
+    </style>
+    <style> 
+        h1 {
+            color: darkslateblue;
+            font-size: 32px;
+            font-family: 'Raleway';
+        }      
+        h3 {
+            color: whitesmoke;
+            font-size: 12px;
+            font-family: 'Raleway';
+            line-height: 8px;
+        } 
+        h4 {
+            color: whitesmoke;
+            font-size: 14px;
+            font-family: 'Raleway';
+            line-height: 8px;
+        } 
+        h5 {
+            color: whitesmoke;
+            font-size: 14px;
+            font-family: 'Raleway';
+            line-height: 8px;
+            vertical-align: 0px;
+        } 
+        h6 {
+            color: #151515;
+            font-size: 16px;
+            font-family: 'Titillium Web', sans-serif;
+            line-height: 20px;
+            vertical-align: 0px;
+            text-align: justify;
+        }     
+        .titulo-anton {
+            color: #151515;
+            font-size: 25px;
+            font-family: 'Anton', sans-serif;
+            line-height: 28px;
+            vertical-align: 0px;
+            text-align: center;
+        }   
+        .leaflet-popup-content {
+            background: #B40404;
+            color: black;
+            width: 220px;
+            text-align: center;
+            position: absolute;
+            line-height: 20px;
+        }
+    </style> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+</head>
+<body>
+	
+    <div id="header">
+        <img src="Datos/ufro.png" width="300" height="100" align="right"> Visor del Ejército Romano en el siglo II
+    </div>
+    <div id="subheader">
+        FONDECYT DE INICIACIÓN N° 11180219 "La Pax Antonina: ideología militar, política exterior y gran estrategia del Imperio Romano en el siglo de los antoninos."<br>
+        Dr. Andrés Sáez Geoffroy, Grupo de Historia, Departamento de Ciencias Sociales
+    </div>
+
+    <div id="map"></div> 
+    
+    <div id="sidebar">
+        <img src="Datos/Adriano.jpg" width="80" height="250" class="center">
+        <div class="titulo-anton">
+            <p><b>"La Pax Antonina: ideología militar, política exterior y gran estrategia del Imperio Romano en el siglo de los Antoninos."</b></p>
+        </div>
+        <h6><p class="miparrafo">El proyecto “La pax Antonina: Ideología militar, política exterior y gran estrategia del Imperio Romano en el siglo de los Antoninos” es una propuesta de investigación centrada en el estudio de la época del siglo II en el Imperio Romano. Este visor del ejército romano que se irá perfeccionando y actualizando en el tiempo es uno de los resultados. La localización y el análisis de esa localización permite explicar como el Imperio Romano diseñó y construyó desde la época de los emperadores Trajano y Adriano una nueva Geografía Imperial. Actualmente el Visor está en fase de construcción, pero a pesar de ello se puede seguir consultando</p></h6>
+        <h6><p class="miparrafo"><b>Investigador Responsable:</b> Dr. Andrés Sáez Geoffroy</p></h6>
+        <h6><p class="miparrafo"><b>Correo Electrónico:</b> andres.saez@ufrontera.cl</p></h6>
+    </div>
+
+<script> 
+var map = L.map('map', {center: [46.953100, 2.690151], zoom: 6});          
+L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+    ext: 'jpg'
+}).addTo(map);
+
+var carto = L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_nolabels/{z}/{x}/{y}.png', { 
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attribution">CARTO</a>'
+});
+    
+var estilo_vias = { color: 'white', opacity: 2, weight: 5, dashArray: '7' };
+var estilo_primarias = { color: 'red', opacity: 2, weight: 4, dashArray: '1' };
+var estilo_secundarias = { color: 'red', opacity: 2, weight: 2, dashArray: '4' };
+    
+var estilo_imperio = { 
+    color: "#380B61", 
+    opacity: 1, 
+    weight: 3, 
+    dashArray: '6', 
+    fillColor: "#BF00FF", 
+    fillOpacity: 0.2 
+};
+
+var estilo_provincias = { 
+    color: "red", 
+    opacity: 0.3, 
+    weight: 3, 
+    dashArray: '4', 
+    fillColor: "white", 
+    fillOpacity: 0.2 
+};
+
+var estilo_rios = { color: '#01A9DB', opacity: 2, weight: 3, dashArray: '0' };
+    
+var Icono = L.icon({
+    iconUrl: 'Datos/casco-romano.png',
+    iconSize: [45, 45],
+    shadowUrl: 'marker-shadow.png',
+    shadowSize: [15, 40],
+    shadowAnchor: [0, 40],
+    popupAnchor: [0, -40]
+});
+    
+var ciudad_icono = L.icon({
+    iconUrl: 'Datos/pantheon (1).png',
+    iconSize: [35, 35],
+    shadowUrl: 'marker-shadow.png',
+    shadowSize: [15, 40],
+    shadowAnchor: [0, 40],
+    popupAnchor: [0, -40]
+});
+
+function ventana(feature, layer) {
+    layer.bindPopup("<h3>Unidad:  " + feature.properties.Unidad + "</h3><h3>Tipo:  " + feature.properties.Tipo + "</h3>");
+}
+
+function ventana_provincia(feature, layer) {
+    layer.bindPopup("<h3>Nombre:  " + feature.properties.Nombre + "</h3>");
+}
+
+function ventana_ciudades(feature, layer) {
+    layer.bindPopup("<h3>Nombre:  " + feature.properties.label + "</h3>");
+}
+
+var marcadores = L.markerClusterGroup();
+var Unidades = marcadores.addLayer(L.geoJson(Unidades, {
+    onEachFeature: function(feature, layer) {
+        layer.setIcon(Icono);
+        ventana(feature, layer);
+    }
+})).addTo(map);
+                        
+var vias = new L.Shapefile('Datos/vias.zip', { style: estilo_vias });
+var limites = new L.Shapefile('Datos/Limites_Imperio.zip', { style: estilo_imperio, onEachFeature: ventana_provincia });
+var provincias = new L.Shapefile('Datos/Provs.zip', { style: estilo_provincias, onEachFeature: ventana_provincia });
+var rios = new L.Shapefile('Datos/riosprincipales.zip', { style: estilo_rios });
+var primarias = new L.Shapefile('Datos/vias_principales.zip', { style: estilo_primarias });
+var secundarias = new L.Shapefile('Datos/vias_secundarias.zip', { style: estilo_secundarias });
+var ciudades = new L.Shapefile('Datos/ciudades.zip', {
+    onEachFeature: function(feature, layer) {
+        layer.setIcon(ciudad_icono);
+        ventana_ciudades(feature, layer);
+    }
+});
+
+var bing = new L.BingLayer("AoKSyfpZ7b1ddBmbETxRncM9Co95hLlXwhTTi0hUMHaqWDFZHX2f8WuCqMfU3b3n", {type: "Aerial"});
+var ESRI = L.esri.basemapLayer('Terrain');
+var Thunderforest = L.tileLayer('https://tile.thunderforest.com/landscape/{z}/{x}/{y}.png?apikey=14c90af4880a4a438852ac445440ba19', {attribution: '&copy; <a href="http://www.thunderforest.com/">Thunderforest</a>, &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'});
+var Mapbox = L.tileLayer('https://api.mapbox.com/styles/v1/andretius/ckm3nslfp3bw417qre19uq1n8/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiYW5kcmV0aXVzIiwiYSI6ImNqOG91ZW9zZjA4dTQyeHFjM3BzcWY2YmEifQ.RERMKAcamHnCi6W210kbDA');
+var Mapbox2 = L.tileLayer('https://api.mapbox.com/styles/v1/andretius/ckm3oln0h0pnu17qq8dxe5iaj/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiYW5kcmV0aXVzIiwiYSI6ImNqOG91ZW9zZjA4dTQyeHFjM3BzcWY2YmEifQ.RERMKAcamHnCi6W210kbDA');
+
+var map1 = L.tileLayer('https://api.maptiler.com/tiles/hillshades/{z}/{x}/{y}.png?key=zt9ghTofJglIyXkAl94Q', {
+    attribution: "\u003ca href=\"https://www.maptiler.com/copyright/\" target=\"_blank\"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e", 
+    crossOrigin: true 
+});
+
+var patrimonio = L.tileLayer.wms("https://ags.cga.harvard.edu/arcgis/services/darmc/roman/MapServer/WMSServer?", {
+    layers: "10",
+    opacity: 0.4,
+    version: '1.3.0',
+    attribution: "© IDEmallorca. Consell de Mallorca 2010"
+});
+
+var map2 = L.tileLayer('https://api.maptiler.com/tiles/satellite-mediumres-2018/{z}/{x}/{y}.jpg?key=zt9ghTofJglIyXkAl94Q', {
+    tileSize: 512,
+    zoomOffset: -1,
+    minZoom: 1,
+    attribution: "\u003ca href=\"https://www.maptiler.com/copyright/\" target=\"_blank\"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e",
+    crossOrigin: true
+});
+
+var overlays = [{
+    groupName: "Unidades Militares",
+    layers: { "Unidades Militares": Unidades }
+}];
+
+var baseMaps = [{
+    groupName: "Mapa Base",
+    layers: { 
+        "ESRI Terreno": ESRI, 
+        "Mapa actual de rutas": Thunderforest, 
+        "Terreno": Mapbox, 
+        "Mapa en Grises": Mapbox2, 
+        "Hillshade": map1, 
+        "Satélite actual": map2, 
+        "Patrimonios": patrimonio 
+    }
+}, {
+    groupName: "Elementos del Imperio",
+    layers: { 
+        "Límites en 117AD": limites,
+        "Provincias en 117AD": provincias,
+        "Caminos primarios": primarias,
+        "Caminos secundarios": secundarias,
+        "Ciudades principales": ciudades,
+        "Rios del Imperio": rios 
+    }
+}];
+
+var options = { 
+    container_width: "350px", 
+    group_maxHeight: "150px", 
+    exclusive: false, 
+    collapsed: false, 
+    position: 'topright' 
+};
+
+var capas = L.Control.styledLayerControl(overlays, baseMaps, options); 
+map.addControl(capas);
+
+var sidebar = L.control.sidebar('sidebar', {
+    position: 'left', 
+});
+
+map.addControl(sidebar);
+
+setTimeout(function () {
+    sidebar.show();
+}, 500);
+ 
+map.on('click', function () {
+    sidebar.hide();
+});
+
+L.control.scale({position: 'bottomleft', metric: true, imperial: false, maxWidth: 100}).addTo(map);
+
+var leyenda = L.control({position: 'bottomright'}); 
+leyenda.onAdd = function (map) {
+    var div = L.DomUtil.create('div', 'leyendaestilo');
+    div.innerHTML += '<img src="Datos/Simbologia.png" width="300" height="120" alt="leyenda" />';
+    return div;
+};
+leyenda.addTo(map);
+</script>  
+</body>
+</html>
+            sidebar.hide();
+        })
+ 
+L.control.scale({position:'bottomleft',metric: true,imperial: false, maxWidth: 100}).addTo(map);
+var leyenda = L.control({position: 'bottomright'}); 
+
+ leyenda.onAdd = function (map) {
+            var div = L.DomUtil.create('div', 'leyendaestilo');
+            div.innerHTML +='<img src="Datos/Simbologia.png" width="300" height="120" alt="leyenda" />';
+            return div;
+                };
+ leyenda.addTo(map);
+
+ </script>  
+</body>
+</html>
