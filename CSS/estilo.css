@@ -1,0 +1,66 @@
+@charset "UTF-8";
+
+body {
+    padding: 0;
+    margin: 0;
+}
+
+html, body, #map {
+    height: 95.5%;
+  
+}
+        
+.leaflet-popup-content {
+     background: #FFF0D2;
+     color: #333;
+     text-align: center;
+     width: 220px;
+	} 
+
+img.a {
+  vertical-align: text-top;
+}
+
+.leaflet-popup-content-wrapper {
+	background: #FFE3AF;	
+      }
+
+.leaflet-popup-tip {
+      background: #FFE3AF;		
+    }
+
+#header {
+    color: #FBF2EF;
+    background-color:#0B3861;
+    height: 100px;
+    text-align: left;
+    font-family: 'Oswald', sans-serif;
+    font-weight: bolder;
+    font-size: 70px;
+    text-indent: 40px;
+    
+}
+#subheader {
+    color: #FBF2EF;
+    background-color: #8A0808;
+    height: 20px;
+    text-align: left;
+    font-family: 'Rubik', sans-serif;
+    font-size: 15px;
+    text-indent: 40px;
+    
+}
+
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+.miparrafo {
+margin: -10px;
+}
+
+.estilolateral {
+ background-color: #8258FA
+     }
